@@ -91,21 +91,23 @@ module Sinatra
 
       config["modules"].each do |mod|
 
-        case mod
-        when String
-          path = mod
-        when Hash
+        if mod["path"]
           path = mod["path"]
-          override_settings = mod["settings"]
+        elsif mod["git"]
+          git_repo = File.basename mod["git"], '.git'
+          path = File.join 'modules/', git_repo
         end
-
-        full_module_path = File.join( caller_path, path )
+        
+        path = File.join(caller_path, path)
+        pp path
+        override_settings = mod["settings"]
 
         if override_settings
           register_module( full_module_path, override_settings )
         else 
           register_module full_module_path
         end
+
       end
     end
     
