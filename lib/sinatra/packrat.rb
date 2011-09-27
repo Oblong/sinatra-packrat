@@ -42,10 +42,8 @@ module Sinatra
 
       klass = app
 
-      Kernel.class_exec do
-        define_method :packrat do |&block|
-          klass.class_exec &block
-        end
+      Kernel.send :define_method, :packrat do |&block|
+        klass.class_exec &block
       end
     end
 
