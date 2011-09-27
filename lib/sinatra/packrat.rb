@@ -96,14 +96,13 @@ module Sinatra
           path = File.join 'modules/', git_repo
         end
         
-        path = File.join(caller_path, path)
-        pp path
+        full_path = File.join(caller_path, path)
         override_settings = mod["settings"]
 
         if override_settings
-          register_module( full_module_path, override_settings )
+          register_module( full_path, override_settings )
         else 
-          register_module full_module_path
+          register_module full_path
         end
 
       end
