@@ -7,5 +7,6 @@ Gem::Specification.new do |s|
   s.authors     = ["Brennan Roberts", "Brandon Harvey"]
   s.email       = 'brennan@oblong.com'
   s.files       = ["lib/sinatra/packrat.rb"]
+  s.executables << 'packrat'
   s.homepage    = 'http://rubygems.org/gems/sinatra-packrat'
 end
