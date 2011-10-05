@@ -5,14 +5,14 @@ require "yaml"
 config_path = ARGV[0]
 
 unless File.exists? config_path
-  p "#{config_path} does not exist!"
+  print "#{config_path} does not exist!"
   exit
 end
 
 config = YAML::load_file(config_path)
 
 unless config["modules"] and config["modules"].respond_to? :each
-  p "Config file requires a 'module' array"
+  print "Config file requires a 'module' array"
   exit
 end
 
@@ -52,4 +52,4 @@ config["modules"].each do |mod|
     print "Cloning #{full_git_path} into #{repo_path} \n"
     `git clone #{full_git_path} #{repo_path}`
   end
-end
+end if config["modules"].respond_to? :each
