@@ -17,7 +17,7 @@ unless config["modules"] and config["modules"].respond_to? :each
 end
 
 current_user = `whoami`.strip
-print "Please provide an Oblong developer name to use for accessing git.oblong.com [#{current_user}]: \n"
+print "Please provide a username [#{current_user}]: \n"
 name = $stdin.gets.strip
 name = current_user if name.empty?
 
