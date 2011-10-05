@@ -16,9 +16,26 @@ unless config["modules"] and config["modules"].respond_to? :each
   exit
 end
 
+current_user = `whoami`.strip
+print "Please provide an Oblong developer name to use for accessing git.oblong.com [#{current_user}]: \n"
+name = $stdin.gets.strip
+name = current_user if name.empty?
+
+
 config["modules"].each do |mod|
   next unless mod["git"]
-
+  
+  git_path_possibly_with_protocol = mod["git"]
+  
+  git_path_possibly_with_protocol = mod["git"]
+  parts = git_path_possibly_with_protocol.split('://')
+  
+  protocol = parts.shift + '://' if parts.length > 1  
+  git_path_without_protocol = parts.join('')
+  
+  full_git_path = "#{name}@#{git_path_without_protocol}"
+  full_git_path = full_git_path.insert(0, protocol) if protocol
+  
   if mod["path"]
     repo_path = mod["path"]
   else
@@ -28,11 +45,11 @@ config["modules"].each do |mod|
 
   if File.directory? repo_path
     Dir.chdir repo_path do
-      p "pulling from #{mod["git"]} into #{repo_path}"
-      `git pull #{mod["git"]} master`
+      print "Pulling from #{full_git_path} into #{repo_path} \n"
+      `git pull #{full_git_path} master`
     end
   else
-    p "cloning #{mod["git"]} into #{repo_path}"
-    `git clone #{mod["git"]} #{repo_path}`
+    print "Cloning #{full_git_path} into #{repo_path} \n"
+    `git clone #{full_git_path} #{repo_path}`
   end
 end
