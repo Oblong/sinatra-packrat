@@ -52,4 +52,17 @@ config["modules"].each do |mod|
     print "Cloning #{full_git_path} into #{repo_path} \n"
     `git clone #{full_git_path} #{repo_path}`
   end
+  
+  Dir.chdir repo_path do
+    if (mod["ref"] || mod["tag"])
+      `git checkout #{mod["ref"] || mod["tag"]}`
+    elsif mod["branch"]
+      branch = mod["branch"]
+      out = `git checkout #{branch}`
+      unless $?.exitstatus == 0
+        `git checkout --track -b #{branch} origin/#{branch}`
+      end
+    end
+  end
+
 end if config["modules"].respond_to? :each
