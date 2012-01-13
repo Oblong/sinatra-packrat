@@ -3,6 +3,7 @@
 require "yaml"
 
 config_path = ARGV[0]
+name = ARGV[1]
 
 unless File.exists? config_path
   print "#{config_path} does not exist!"
@@ -16,11 +17,12 @@ unless config["modules"] and config["modules"].respond_to? :each
   exit
 end
 
-current_user = `whoami`.strip
-print "Please provide a username [#{current_user}]: \n"
-name = $stdin.gets.strip
-name = current_user if name.empty?
-
+if name.nil?
+  current_user = `whoami`.strip
+  print "Please provide a username [#{current_user}]: \n"
+  name = $stdin.gets.strip
+  name = current_user if name.empty?
+end
 
 config["modules"].each do |mod|
   next unless mod["git"]
