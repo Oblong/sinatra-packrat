@@ -19,7 +19,9 @@ A base Sinatra app can be comprised of many packrat modules.
 
 Specify your modules within a config.yml:
 
-```yml modules:
+```yaml
+
+modules:
 
 # from a git repository
 - git: https://github.com/example.git
