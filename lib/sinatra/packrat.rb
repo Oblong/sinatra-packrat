@@ -17,9 +17,14 @@ module Sinatra
       # Allow settings.public to be an Array (or Enumerable...)
       # for multiple-path static file lookup.
       def static!
-        return if settings.public.nil?
-        if settings.public.respond_to? :each
-          settings.public.each do |dir|
+        if settings.respond_to? :public_folder
+          cur_view = settings.public_folder || []
+        else
+          cur_view = settings.public || []
+        end
+        return if cur_view.nil?
+        if cur_view.respond_to? :each
+          cur_view.each do |dir|
             public_dir = File.expand_path(dir)
             path = File.expand_path(public_dir + unescape(request.path_info))
             next unless path.start_with?(public_dir) and File.file?(path)
@@ -73,14 +78,23 @@ module Sinatra
     end
 
     def add_public_path(path)
-      cur_view = settings.public || []
+      if settings.respond_to? :public_folder
+        cur_view = settings.public_folder || []
+      else
+        cur_view = settings.public || []
+      end
       
       if cur_view.class == String
         cur_view = Array(cur_view)
       end
       
       cur_view << path
-      set :public, cur_view
+
+      if settings.respond_to? :public_folder
+        set :public_folder, cur_view
+      else
+        set :public, cur_view
+      end
     end
 
     def register_modules_from_yaml(path)
